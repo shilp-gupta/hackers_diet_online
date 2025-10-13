@@ -126,26 +126,48 @@
         return substr($self->{cookie_id}, 0, 23) . $cookSig . substr($self->{cookie_id}, 23);
     }
 
+    sub cookie_scope {
+        my $domain = $ENV{HDO_COOKIE_DOMAIN};
+        if (!defined($domain) || ($domain eq '')) {
+            $domain = $ENV{HTTP_HOST};
+            if (!defined($domain) || ($domain eq '')) {
+                $domain = $ENV{SERVER_NAME} // '';
+            }
+        }
+        $domain =~ s/:\d+$// if $domain ne '';
+
+        my $path = $ENV{HDO_COOKIE_PATH};
+        if (!defined($path) || ($path eq '')) {
+            $path = '/cgi-bin/HackDiet';
+        }
+
+        return ($domain, $path);
+    }
+
     sub generateCookie {
         my $self = shift;
         my ($name) = @_;
 
-        return "$name=" . $self->signCookie() . "; " .
-               "Domain=.fourmilab.ch; " .
-               "Path=/cgi-bin/HackDiet; " .
-               "Expires=" .
-                jd_to_old_cookie_date(unix_time_to_jd($self->{expiry_time}));
+        my ($domain, $path) = cookie_scope();
+        my @parts = ("$name=" . $self->signCookie());
+        push(@parts, "Domain=$domain") if $domain ne '';
+        push(@parts, "Path=$path");
+        push(@parts, "Expires=" .
+                jd_to_old_cookie_date(unix_time_to_jd($self->{expiry_time})));
+        return join("; ", @parts);
     }
 
     sub expireCookie {
         my $self = shift;
         my ($name) = @_;
 
-        return "$name=EXPIRED; " .
-               "Domain=.fourmilab.ch; " .
-               "Path=/cgi-bin/HackDiet; " .
-               "Expires=" .
-                jd_to_old_cookie_date(gregorian_to_jd(1990, 1, 1));
+        my ($domain, $path) = cookie_scope();
+        my @parts = ("$name=EXPIRED");
+        push(@parts, "Domain=$domain") if $domain ne '';
+        push(@parts, "Path=$path");
+        push(@parts, "Expires=" .
+                jd_to_old_cookie_date(gregorian_to_jd(1990, 1, 1)));
+        return join("; ", @parts);
     }
 
     sub storeCookie {

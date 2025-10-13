@@ -33,6 +33,7 @@ COPY . /opt/hackers_diet_online
 RUN mkdir -p /server/bin/httpd/cgi-bin \
         /server/pub/hackdiet/Users \
         /server/pub/hackdiet/Sessions \
+        /server/pub/hackdiet/RememberMe \
         /server/pub/hackdiet/ClusterSync \
         /server/run/ClusterSync \
         /server/log/hackdiet \
@@ -41,7 +42,9 @@ RUN mkdir -p /server/bin/httpd/cgi-bin \
     && ln -sf HackDiet.pl /server/bin/httpd/cgi-bin/HackDiet \
     && ln -sf HackDietBadge.pl /server/bin/httpd/cgi-bin/HackDietBadge \
     && mkdir -p /var/www/html/hackdiet \
-    && ln -sf /server/bin/httpd/cgi-bin/HDiet/webdoc /var/www/html/hackdiet/online \
+    && mkdir -p /var/www/html/hackdiet/online \
+    && rm -rf /var/www/html/hackdiet/online/* \
+    && cp -r /opt/hackers_diet_online/webdoc/. /var/www/html/hackdiet/online/ \
     && chmod +x /server/bin/httpd/cgi-bin/*.pl /opt/hackers_diet_online/docker/entrypoint.sh \
     && chown -R www-data:www-data /server/pub/hackdiet
 

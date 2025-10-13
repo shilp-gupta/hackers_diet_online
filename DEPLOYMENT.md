@@ -24,6 +24,7 @@ docker run -d \
 - Static documentation is available at `http://localhost:8080/hackdiet/online/`.
 - The container entrypoint ensures `/server/pub/hackdiet` (and subdirectories such as `Users`) are owned by `www-data`, so the CGI scripts can create new accounts even when the host volume is mounted.
 - If you reuse a previous data directory, remove any leftover account folders in `hackdiet-data/Users` (or pick a new username) before creating a new account; each account corresponds to a directory in that location.
+- Optionally set `HDO_COOKIE_DOMAIN` (and `HDO_COOKIE_PATH`) in `docker run` if you serve the app behind a custom hostname—cookies default to the current host when unset.
 
 ## Customise Links and Branding
 - Many legacy pages reference `https://www.fourmilab.ch`. To serve everything locally, update the files in `webdoc/` before building (for example, replace external URLs with your domain).
