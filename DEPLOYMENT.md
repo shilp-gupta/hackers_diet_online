@@ -9,6 +9,13 @@
 ```sh
 docker build -t hackers-diet-online .
 ```
+- Override the public links baked into the image (and the cookie domain) by supplying build arguments, for example:
+  ```sh
+  docker build \
+    --build-arg HDO_COOKIE_DOMAIN=weight.example.com \
+    --build-arg HDO_SITE_SCHEME=https \
+    -t hackers-diet-online .
+  ```
 
 ## Run the Container
 Create a host directory for persistent data (for example `./hackdiet-data`), then start the container:

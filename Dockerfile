@@ -1,5 +1,8 @@
 FROM debian:bookworm-slim
 
+ARG HDO_COOKIE_DOMAIN=localhost:8080
+ARG HDO_SITE_SCHEME=http
+
 ENV DEBIAN_FRONTEND=noninteractive \
     APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=www-data \
@@ -7,7 +10,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     APACHE_PID_FILE=/var/run/apache2/apache2.pid \
     APACHE_LOCK_DIR=/var/run/apache2 \
     APACHE_RUN_DIR=/var/run/apache2 \
-    PERL5LIB=/server/bin/httpd/cgi-bin:/server/bin/httpd/cgi-bin/HDiet/Cgi
+    PERL5LIB=/server/bin/httpd/cgi-bin:/server/bin/httpd/cgi-bin/HDiet/Cgi \
+    HDO_COOKIE_DOMAIN=${HDO_COOKIE_DOMAIN} \
+    HDO_SITE_SCHEME=${HDO_SITE_SCHEME} \
+    HDO_COOKIE_PATH=/cgi-bin/HackDiet
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
@@ -30,6 +36,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt/hackers_diet_online
 COPY . /opt/hackers_diet_online
 
+RUN bash /opt/hackers_diet_online/docker/rewrite-links.sh
+
 RUN mkdir -p /server/bin/httpd/cgi-bin \
         /server/pub/hackdiet/Users \
         /server/pub/hackdiet/Sessions \
@@ -45,7 +53,7 @@ RUN mkdir -p /server/bin/httpd/cgi-bin \
     && mkdir -p /var/www/html/hackdiet/online \
     && rm -rf /var/www/html/hackdiet/online/* \
     && cp -r /opt/hackers_diet_online/webdoc/. /var/www/html/hackdiet/online/ \
-    && chmod +x /server/bin/httpd/cgi-bin/*.pl /opt/hackers_diet_online/docker/entrypoint.sh \
+    && chmod +x /server/bin/httpd/cgi-bin/*.pl /opt/hackers_diet_online/docker/entrypoint.sh /opt/hackers_diet_online/docker/rewrite-links.sh \
     && chown -R www-data:www-data /server/pub/hackdiet
 
 RUN rm -f /etc/apache2/sites-enabled/* \
