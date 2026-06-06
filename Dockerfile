@@ -13,11 +13,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PERL5LIB=/server/bin/httpd/cgi-bin:/server/bin/httpd/cgi-bin/HDiet/Cgi \
     HDO_COOKIE_DOMAIN=${HDO_COOKIE_DOMAIN} \
     HDO_SITE_SCHEME=${HDO_SITE_SCHEME} \
-    HDO_COOKIE_PATH=/cgi-bin/HackDiet
+    HDO_COOKIE_PATH=/cgi-bin/HackDiet \
+    TMPDIR=/tmp
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         apache2 \
-        libapache2-mod-perl2 \
         dnsutils \
         libcgi-pm-perl \
         libgd-perl \
@@ -43,6 +43,9 @@ RUN mkdir -p /server/bin/httpd/cgi-bin \
         /server/pub/hackdiet/Sessions \
         /server/pub/hackdiet/RememberMe \
         /server/pub/hackdiet/ClusterSync \
+        /server/pub/hackdiet/Pubname \
+        /server/pub/hackdiet/Invitations \
+        /server/pub/hackdiet/Backups \
         /server/run/ClusterSync \
         /server/log/hackdiet \
     && cp -r src/HDiet /server/bin/httpd/cgi-bin/ \

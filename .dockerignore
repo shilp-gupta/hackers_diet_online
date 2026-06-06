@@ -1,0 +1,22 @@
+# Version control
+.git
+.gitignore
+
+# Local runtime data — must never be baked into the image
+hackdiet-data
+
+# nuweb / LaTeX build artifacts (generated from src/hdiet.w)
+src/hdiet.dvi
+src/hdiet.log
+src/hdiet.aux
+src/hdiet.toc
+src/hdiet.out
+src/hdiet.tar
+src/Sdist
+src/Fourmilab
+src/Fourmilate.pl
+
+# Editor / OS cruft
+*.swp
+*~
+.DS_Store

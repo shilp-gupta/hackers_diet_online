@@ -1,0 +1,46 @@
+# Hardened deployment: immutable root filesystem, least-privilege.
+#
+# The whole container filesystem is read-only. The ONLY writable locations are:
+#   - the bind-mounted data volume (persistent user data)
+#   - three tmpfs mounts for Apache runtime, Apache logs, and CGI upload temps
+# Everything else — including the application code in /server/bin/httpd/cgi-bin —
+# is physically read-only, so even an RCE in the Perl CGI cannot modify code or
+# persist anything outside these mounts.
+#
+#   docker compose up -d --build
+#   # validate at http://localhost:8080/cgi-bin/HackDiet
+#
+services:
+  hackers-diet:
+    build:
+      context: .
+      # Override baked-in public links / cookie domain here if needed:
+      # args:
+      #   HDO_COOKIE_DOMAIN: weight.example.com
+      #   HDO_SITE_SCHEME: https
+    image: hackers-diet-online
+    container_name: hackers-diet
+    # Bind to loopback only — not reachable from other hosts on the network.
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./hackdiet-data:/server/pub/hackdiet
+    # Immutable root filesystem.
+    read_only: true
+    # Writable scratch areas (wiped on restart; none hold persistent data).
+    tmpfs:
+      - /var/run/apache2   # Apache pid + mod_cgid socket
+      - /run/lock          # Apache lock dir (/var/lock -> /run/lock); required by apache2ctl
+      - /var/log/apache2   # access/error logs
+      - /tmp               # CGI multipart upload spool (TMPDIR=/tmp)
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN            # entrypoint chowns the data volume
+      - DAC_OVERRIDE     # access files across uid boundaries during setup
+      - SETUID           # Apache drops privileges to www-data
+      - SETGID
+      - NET_BIND_SERVICE # bind port 80
+    restart: unless-stopped

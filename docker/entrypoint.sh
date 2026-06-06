@@ -2,12 +2,18 @@
 set -euo pipefail
 
 DATA_ROOT="/server/pub/hackdiet"
-USERS_DIR="$DATA_ROOT/Users"
-SESSIONS_DIR="$DATA_ROOT/Sessions"
-REMEMBER_DIR="$DATA_ROOT/RememberMe"
-CLUSTER_DIR="$DATA_ROOT/ClusterSync"
 
-mkdir -p "$USERS_DIR" "$SESSIONS_DIR" "$REMEMBER_DIR" "$CLUSTER_DIR"
+# Recreate every data subdirectory the application writes to. This matters for
+# bind mounts, which (unlike named/anonymous volumes) do NOT inherit the dirs
+# seeded into the image, so they must be (re)created on every start.
+mkdir -p \
+    "$DATA_ROOT/Users" \
+    "$DATA_ROOT/Sessions" \
+    "$DATA_ROOT/RememberMe" \
+    "$DATA_ROOT/ClusterSync" \
+    "$DATA_ROOT/Pubname" \
+    "$DATA_ROOT/Invitations" \
+    "$DATA_ROOT/Backups"
 chown -R www-data:www-data "$DATA_ROOT"
 
 exec "$@"
