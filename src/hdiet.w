@@ -10182,6 +10182,14 @@ log entries it contains.
 @d Import log items from XML database file
 @{
     my $parser = XML::LibXML->new();
+    #   Do not fetch the external DTD/entities referenced by the
+    #   <!DOCTYPE ... SYSTEM "http://.../hackersdiet.dtd"> declaration in
+    #   exported files.  Fetching it requires outbound network (which a
+    #   hardened deployment may not have) and, more importantly, fetching
+    #   external entities at all is an XXE risk.  The DTD is only validation
+    #   metadata and is not needed to import the log data.
+    $parser->load_ext_dtd(0);
+    $parser->no_network(1);
     my $doc = $parser->parse_string($CGIargs{file});
     my $root = $doc->getDocumentElement();
 
@@ -10300,6 +10308,8 @@ interpretation.
 @d Dump XML database file
 @{
     my $parser = XML::LibXML->new();
+    $parser->load_ext_dtd(0);
+    $parser->no_network(1);
     my $doc = $parser->parse_string($CGIargs{file});
     my $root = $doc->getDocumentElement();
 
