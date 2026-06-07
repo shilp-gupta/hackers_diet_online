@@ -14,7 +14,10 @@ services:
   hackers-diet:
     build:
       context: .
-      # Override baked-in public links / cookie domain here if needed:
+      # Generic image. The public domain/scheme baked into links
+      # (HDO_COOKIE_DOMAIN, HDO_SITE_SCHEME) default to localhost:8080/http here
+      # (see Dockerfile). Per-deployment values + runtime secrets go in
+      # docker-compose.override.yml (git-ignored), which Compose auto-merges.
       # args:
       #   HDO_COOKIE_DOMAIN: weight.example.com
       #   HDO_SITE_SCHEME: https

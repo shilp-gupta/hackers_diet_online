@@ -686,7 +686,7 @@ EOD
         $plain .= sprintf("%08x", $crc->strcrc32($plain));
 
         my $crypto = Crypt::CBC->new(
-                -key => "Super duper top secret!",
+                -key => ($ENV{HDO_AES_KEY} || "Super duper top secret!"),
                 -cipher => "Crypt::OpenSSL::AES"
                                     );
         my $encrypted = $crypto->encrypt($plain);

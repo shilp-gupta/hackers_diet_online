@@ -1,0 +1,20 @@
+# Example deployment override. Copy to docker-compose.override.yml (git-ignored)
+# and fill in real values; also create secrets.env (see below). Compose
+# auto-merges docker-compose.override.yml on top of docker-compose.yml.
+#
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   printf 'HDO_AES_KEY=%s\nHDO_SECRET_SALT=%s\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 32)" > secrets.env
+#   chmod 600 secrets.env
+#   docker compose up -d --build
+services:
+  hackers-diet:
+    build:
+      args:
+        # Public host + scheme this instance is served on (behind your proxy).
+        # Baked into the app's absolute links and used as the cookie domain.
+        HDO_COOKIE_DOMAIN: your-domain.example
+        HDO_SITE_SCHEME: https
+    # Per-install crypto secrets (HDO_AES_KEY, HDO_SECRET_SALT). Keep in a
+    # git-ignored secrets.env; forwarded to the CGI via the vhost PassEnv.
+    env_file:
+      - secrets.env

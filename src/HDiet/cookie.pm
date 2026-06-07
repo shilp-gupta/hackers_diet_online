@@ -119,7 +119,7 @@
         my $self = shift;
 
         my $crc = new HDiet::Digest::Crc32();
-        my $cookSig = sprintf("%08x", $crc->strcrc32("Sodium Chloride" .
+        my $cookSig = sprintf("%08x", $crc->strcrc32(($ENV{HDO_SECRET_SALT} || "Sodium Chloride") .
             $self->{cookie_id}));
         $cookSig =~ tr/a-f/FGJKQW/;
 
@@ -223,7 +223,7 @@
 
         my $cookieSig = substr($signedCookie, 23, 8, "");
         $cookieSig =~ tr/FGJKQW/a-f/;
-        my $cookSig = sprintf("%08x", $crc->strcrc32("Sodium Chloride" .
+        my $cookSig = sprintf("%08x", $crc->strcrc32(($ENV{HDO_SECRET_SALT} || "Sodium Chloride") .
             $signedCookie));
 #print("cookSig ($cookSig)  cookieSig ($cookieSig)  signedCookie ($signedCookie)\n");
         if ($cookSig eq $cookieSig) {

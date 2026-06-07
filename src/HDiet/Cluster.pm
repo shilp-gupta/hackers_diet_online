@@ -107,7 +107,7 @@
                         print(TO "$operation\n");
                         print(TO "$filename\n");
                         print(TO sha1_hex(FILE_VERSION . $operation . $filename .
-                            "Sodium Chloride") . "\n");
+                            ($ENV{HDO_SECRET_SALT} || "Sodium Chloride")) . "\n");
                         close(TO);
                         if (open(PI, "</server/run/ClusterSync/ClusterSync.pid")) {
                             my $syncpid = <PI>;

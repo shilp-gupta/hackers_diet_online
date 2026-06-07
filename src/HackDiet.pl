@@ -2202,7 +2202,7 @@ in the box.
 EOD
         
     my $concode = $ui->generatePassword(10);
-    my $consig = sha1_hex($concode . "Sodium Chloride");
+    my $consig = sha1_hex($concode . ($ENV{HDO_SECRET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     print $fh <<"EOD";
@@ -2359,7 +2359,7 @@ EOD
 
     $CGIargs{c} = '' if !defined($CGIargs{c});
     $CGIargs{HDiet_confirmation} = '' if !$CGIargs{HDiet_confirmation};
-    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . "Sodium Chloride");
+    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . ($ENV{HDO_SECRET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     if (($CGIargs{HDiet_username} ne $ui->{login_name}) ||
@@ -2596,7 +2596,7 @@ in the box.
 EOD
         
     my $concode = $ui->generatePassword(10);
-    my $consig = sha1_hex($concode . "Sodium Chloride");
+    my $consig = sha1_hex($concode . ($ENV{HDO_SECRET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     print $fh <<"EOD";
@@ -2754,7 +2754,7 @@ EOD
 
     $CGIargs{c} = '' if !defined($CGIargs{c});
     $CGIargs{HDiet_confirmation} = '' if !$CGIargs{HDiet_confirmation};
-    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . "Sodium Chloride");
+    my $consig = sha1_hex($CGIargs{HDiet_confirmation} . ($ENV{HDO_SECRET_SALT} || "Sodium Chloride"));
     $consig =~ tr/a-f/FGJKQW/;
 
     if (($CGIargs{HDiet_username} ne $ui->{login_name}) ||

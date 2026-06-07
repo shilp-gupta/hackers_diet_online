@@ -136,7 +136,7 @@
         logmsg("$lm");
     }
     if (sha1_hex($file_version . $transaction . $filename .
-        "Sodium Chloride") ne $signature) {
+        ($ENV{HDO_SECRET_SALT} || "Sodium Chloride")) ne $signature) {
         die("ClusterSync: Invalid signature in transaction");
     }
     if ($filename !~ m:^/server/pub/hackdiet:) {

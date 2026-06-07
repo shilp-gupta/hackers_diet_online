@@ -20,3 +20,9 @@ src/Fourmilate.pl
 *.swp
 *~
 .DS_Store
+
+# Runtime secrets — never bake into the image
+secrets.env
+
+# Deployment override — host-specific, keep out of the image
+docker-compose.override.yml

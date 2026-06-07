@@ -335,7 +335,7 @@ string before computing the signature for encoding and
 verification.  You should change this suffix to a secret
 value which you do not disclose to users of your server.
 
-@d Confirmation signature encoding suffix @{"Sodium Chloride"@}
+@d Confirmation signature encoding suffix @{($ENV{HDO_SECRET_SALT} || "Sodium Chloride")@}
 
 \subsection{Master encryption key}
 
@@ -351,7 +351,7 @@ process---be sure to insert
 your own randomly-generated key here and guard it against those
 who would compromise your site.
 
-@d Master encryption key @{"Super duper top secret!"@}
+@d Master encryption key @{($ENV{HDO_AES_KEY} || "Super duper top secret!")@}
 
 \subsection{Monthly log weight range}
 

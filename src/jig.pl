@@ -123,7 +123,7 @@ print(STDERR "user::decodeEncryptedUserID: Outer CRC bad: $cryptoSig $outerSig\n
         }
 
         my $crypto = Crypt::CBC->new(
-                -key => "Super duper top secret!",
+                -key => ($ENV{HDO_AES_KEY} || "Super duper top secret!"),
                 -cipher => "Crypt::OpenSSL::AES"
                                     );
 

@@ -8,3 +8,10 @@ src/hdiet.aux
 src/hdiet.out
 src/hdiet.tar
 hackdiet-data
+secrets.env
+docker-compose.override.yml
+
+# Per-developer agent notes / config — each contributor keeps their own
+CLAUDE.md
+AGENTS.md
+.claude/
